@@ -39,7 +39,8 @@ def alpha_beta(game_state, depth, alpha, beta, maximising_player):
             else:
                 return 0, None
         else:
-            return evaluate(game_state), None
+            # return evaluate(game_state), None
+            return 0, None
     if maximising_player:
         max_eval = -math.inf
         possible_moves = game_state.get_moves()

@@ -10,7 +10,8 @@ def run(depth_1, depth_2, with_print, interactive):
     p2 = Player('b')
     game = ConnectFour(first_player=p1, second_player=p2)
     a_points = b_points = 0
-    print(str(game))
+    if with_print:
+        print(str(game))
     while not game.is_finished():
         game_state = game.state
         a_points, a_move = ai.alpha_beta(game_state, depth_1, -math.inf, math.inf, True)
@@ -43,7 +44,7 @@ def run(depth_1, depth_2, with_print, interactive):
 
 
 def make_statistics(depth_1, depth_2):
-    runs_number = 30
+    runs_number = 100
     sum_a = sum_b = sum_r = 0
     for i in range(runs_number):
         winner = run(depth_1, depth_2, False, False)
@@ -54,9 +55,9 @@ def make_statistics(depth_1, depth_2):
         else:
             sum_r += 1
     print(
-        f"Wygrane a: {sum_a / runs_number * 100}, wygrane b:{sum_b / runs_number * 100}, remisy: {sum_r / runs_number * 100} w procentach przypadków")
+        f"Wygrane a: {sum_a}, wygrane b:{sum_b}, remisy: {sum_r}.")
 
 
-#make_statistics(1, 2)
+make_statistics(1, 1)
 
-run(1, 5, True, False)
+# run(1, 5, True, False)
