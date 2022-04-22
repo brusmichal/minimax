@@ -10,11 +10,12 @@ game = ConnectFour(first_player=p1, second_player=p2)
 
 while not game.is_finished():
     game_state = game.state
-    a_points, a_move = ai.alpha_beta(game_state, 1, -math.inf, math.inf, ['a', 'b'], True)
-    b_points, b_move = ai.alpha_beta(game_state, 1, -math.inf, math.inf, ['a', 'b'], False)
+    a_points, a_move = ai.alpha_beta(game_state, 1, -math.inf, math.inf, [p1, p2], True)
+    b_points, b_move = ai.alpha_beta(game_state, 1, -math.inf, math.inf, [p1, p2], False)
 
     game.make_move(a_move)
     print(a_points, str(game))
+    # game.make_move(ConnectFourMove(int(input("Podaj nr kolumny:"))))
     game.make_move(b_move)
     print(b_points, str(game))
 

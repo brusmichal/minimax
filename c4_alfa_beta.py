@@ -1,5 +1,4 @@
 import math
-import random
 
 import numpy as np
 
@@ -29,11 +28,10 @@ def is_finished(game_state):
 
 
 def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player):
+    rng = np.random.default_rng()
     max_player_token = players_tokens[0]
     min_player_token = players_tokens[1]
     if depth == 0 or is_finished(game_state):
-        if depth == 0:
-            return evaluate(game_state), None
         if is_finished(game_state):
             winner = get_winner(game_state)
             if winner == max_player_token:
@@ -42,12 +40,13 @@ def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player
                 return -10e6, None
             else:
                 return 0, None
-
+        else:
+            return evaluate(game_state), None
     if maximising_player:
         max_eval = -math.inf
         best_move = None
         possible_moves = game_state.get_moves()
-        np.random.shuffle(possible_moves)
+        rng.shuffle(possible_moves)
         for move in possible_moves:
             state = game_state.make_move(move)
             eval = alpha_beta(state, depth - 1, alpha, beta, players_tokens, False)[0]
@@ -55,7 +54,7 @@ def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player
                 max_eval = eval
                 best_move = move
             if max_eval == eval:
-                best_move = np.random.choice([best_move, move])
+                best_move = rng.choice([best_move, move])
             # max_eval = max(max_eval, eval)
             alpha = max(alpha, eval)
             if beta <= alpha:
@@ -66,7 +65,7 @@ def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player
         min_eval = math.inf
         best_move = None
         possible_moves = game_state.get_moves()
-        np.random.shuffle(possible_moves)
+        rng.shuffle(possible_moves)
         for move in possible_moves:
             state = game_state.make_move(move)
             eval = alpha_beta(state, depth - 1, alpha, beta, players_tokens, True)[0]
@@ -74,7 +73,7 @@ def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player
                 min_eval = eval
                 best_move = move
             if min_eval == eval:
-                best_move = np.random.choice([best_move, move])
+                best_move = rng.choice([best_move, move])
             min_eval = min(min_eval, eval)
             beta = min(beta, eval)
             if beta <= alpha:

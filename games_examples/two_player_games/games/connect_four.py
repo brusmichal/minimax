@@ -152,6 +152,6 @@ class ConnectFourState(State):
             elif fields[j] is None:
                 h_sum += 5
             else:
-                h_sum = 0
+                h_sum += 0
 
         return h_sum
