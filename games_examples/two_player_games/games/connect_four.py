@@ -72,7 +72,7 @@ class ConnectFourState(State):
         return ConnectFourState(current_player=self._other_player, other_player=self._current_player, fields=new_fields)
 
     def is_finished(self) -> bool:
-        return self.get_winner() is not None
+        return self.get_winner() is not None or len(self.get_moves()) == 0
 
     def get_winner(self) -> Optional[Player]:
         for column_id in range(len(self.fields)):  # verticals
@@ -146,12 +146,18 @@ class ConnectFourState(State):
         ]
         cp = self._current_player
         h_sum = 0
+        cp_count = 0
+        empty_count = 0
         for j in range(len(fields)):
             if fields[j] == cp:
-                h_sum += 10
+                cp_count += 1
             elif fields[j] is None:
-                h_sum += 5
-            else:
-                h_sum += 0
+                empty_count += 1
 
+        if cp_count >= 3 and empty_count == 1:
+            h_sum += 100
+        if cp_count == 2 and empty_count == 2:
+            h_sum += 50
+        if cp_count == 1 and empty_count == 3:
+            h_sum += 25
         return h_sum

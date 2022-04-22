@@ -27,16 +27,14 @@ def is_finished(game_state):
 #     return possible_states, possible_moves
 
 
-def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player):
+def alpha_beta(game_state, depth, alpha, beta, maximising_player):
     rng = np.random.default_rng()
-    max_player_token = players_tokens[0]
-    min_player_token = players_tokens[1]
     if depth == 0 or is_finished(game_state):
         if is_finished(game_state):
             winner = get_winner(game_state)
-            if winner == max_player_token:
+            if winner is current_player(game_state):
                 return 10e6, None
-            elif winner == min_player_token:
+            elif winner is not current_player(game_state):
                 return -10e6, None
             else:
                 return 0, None
@@ -44,17 +42,19 @@ def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player
             return evaluate(game_state), None
     if maximising_player:
         max_eval = -math.inf
-        best_move = None
         possible_moves = game_state.get_moves()
         rng.shuffle(possible_moves)
+        best_move = rng.choice(possible_moves)
         for move in possible_moves:
             state = game_state.make_move(move)
-            eval = alpha_beta(state, depth - 1, alpha, beta, players_tokens, False)[0]
+            eval = alpha_beta(state, depth - 1, alpha, beta, False)[0]
             if eval > max_eval:
                 max_eval = eval
                 best_move = move
-            if max_eval == eval:
+            elif max_eval == eval:
                 best_move = rng.choice([best_move, move])
+            else:
+                best_move = rng.choice(possible_moves)
             # max_eval = max(max_eval, eval)
             alpha = max(alpha, eval)
             if beta <= alpha:
@@ -63,17 +63,19 @@ def alpha_beta(game_state, depth, alpha, beta, players_tokens, maximising_player
         return max_eval, best_move
     else:
         min_eval = math.inf
-        best_move = None
         possible_moves = game_state.get_moves()
         rng.shuffle(possible_moves)
+        best_move = rng.choice(possible_moves)
         for move in possible_moves:
             state = game_state.make_move(move)
-            eval = alpha_beta(state, depth - 1, alpha, beta, players_tokens, True)[0]
+            eval = alpha_beta(state, depth - 1, alpha, beta, True)[0]
             if eval < min_eval:
                 min_eval = eval
                 best_move = move
-            if min_eval == eval:
+            elif min_eval == eval:
                 best_move = rng.choice([best_move, move])
+            else:
+                best_move = rng.choice(possible_moves)
             min_eval = min(min_eval, eval)
             beta = min(beta, eval)
             if beta <= alpha:
