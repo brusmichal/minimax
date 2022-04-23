@@ -145,7 +145,7 @@ class ConnectFourState(State):
             self.fields[start_coords[0] + move_coords[0] * i][start_coords[1] + move_coords[1] * i] for i in range(4)
         ]
         cp = self._current_player
-        count_none = count_cp = count_op = 0
+        count_none = count_cp = count_op = h_sum = 0
         for i in range(len(fields)):
             if fields[i] == cp:
                 count_cp += 1
@@ -153,13 +153,12 @@ class ConnectFourState(State):
                 count_none += 1
             else:
                 count_op += 1
-        h_sum = 0
         if count_cp == 4:
             h_sum += 100
         elif count_cp == 3 and count_none == 1:
-            h_sum = 5
+            h_sum += 5
         elif count_cp == 2 and count_none == 2:
-            h_sum = 2
+            h_sum += 2
         if count_op == 3 and count_none == 1:
-            h_sum -= 4
+            h_sum -= 10
         return h_sum
